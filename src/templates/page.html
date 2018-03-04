@@ -1,0 +1,84 @@
+---
+title: Index page
+---
+{% extends "layouts/_layout.html" %}
+
+{% block content %}
+	
+<canvas id="myscene"></canvas>
+
+<div id="container">
+	<div id="one"></div>
+</div>
+
+
+ <script id="vertexShader" type="x-shader/x-vertex">
+
+			precision mediump float;
+			precision mediump int;
+      
+			uniform mat4 modelViewMatrix; 
+			uniform mat4 projectionMatrix; 
+      
+			attribute vec3 position;
+			attribute vec4 color;
+      
+
+			varying vec3 vPosition;
+      
+			void main()	{
+
+				vPosition = position;
+        
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+		</script>
+
+		<script id="fragmentShader" type="x-shader/x-fragment">
+			precision mediump float;
+			precision mediump int;
+      
+			uniform float time;
+      
+			varying vec3 vPosition;
+      
+			void main()	{
+				
+
+				    vec2 m = vPosition.xy;
+
+
+
+
+				    float border = 0.05;
+				    float radius = 0.1;
+				    float radius1 = 0.1 + abs(sin(time))*0.4;
+				    vec4 color0 = vec4(0.0, 0.0, 0.0, 0.0);
+				    vec4 color1 = vec4(1.0, 1.0, 1.0, 1.0);
+
+				    
+				    float dist = radius - sqrt(m.x * m.x + m.y * m.y);
+				    float dist1 = radius1 - sqrt(m.x * m.x + m.y * m.y);
+
+				    float t = 0.0;
+				    float t1 = 0.0;
+				    if (dist > border)
+				      t = 1.0;
+				    else if (dist > 0.0)
+				      t = dist / border;
+
+				    if (dist1 > border)
+				      t1 = 1.0;
+				    else if (dist1 > 0.0)
+				      t1 = dist1 / border;
+
+				    vec4 temp1 = mix(color0, color1, t);
+				    vec4 temp2 = mix(color0, color1, t1);
+
+				    gl_FragColor = temp2*0.5 + temp1;
+			}
+		</script>
+
+
+{% endblock %}
